@@ -2,7 +2,7 @@ class Theme
   cattr_accessor :cache_theme_lookup
   @@cache_theme_lookup = false
 
-  attr_accessor :name, :title, :description, :preview_image
+  attr_accessor :name, :title, :description, :preview_image, :config
 
   def initialize(name)
     @name = name
@@ -15,6 +15,13 @@ class Theme
       @description_html = RedCloth.new(File.read( File.join(Theme.path_to_theme(name), "about.markdown") )).to_html(:markdown, :textile) rescue "#{title}"
     end
     @description_html
+  end
+
+  def config
+    if @config_settings.nil?
+      @config_settings = YAML.load_file(File.join(Theme.path_to_theme(name), "config.yml")) rescue {}
+    end
+    @config_settings
   end
   
   def has_preview?
