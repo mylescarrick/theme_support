@@ -3,7 +3,7 @@ module ThemeSupport
     
     def self.included(klass)
       klass.send :extend, ClassMethods
-      klass.helper_method :current_theme
+      klass.helper_method :current_theme, :current_theme_config
       klass.send :alias_method, :theme_support_active_layout, :active_layout
       klass.send :include, InstanceMethods
     end
@@ -30,6 +30,7 @@ module ThemeSupport
     module InstanceMethods
       attr_accessor :current_theme
       attr_accessor :force_liquid_template
+      attr_accessor :current_theme_config
       
       # Retrieves the current set theme
       
@@ -59,6 +60,10 @@ module ThemeSupport
         end
 
         theme_support_active_layout(passed_layout, options)
+      end
+
+      def current_theme_config
+        Theme.new(current_theme).config
       end
     end
   end
